@@ -16,6 +16,7 @@ void clearBottomRow() {
 *   const char* -- this is the pointer to the passed char[]
 */
 void setTopText(const char* text) {
+    clearTopRow();
     lcd.setCursor(0, 0);
     lcd.print(text);
 }
@@ -23,6 +24,7 @@ void setTopText(const char* text) {
 *   const char* -- this is the pointer to the passed char[]
 */
 void setBottomText(const char* text) {
+    clearBottomRow();
     lcd.setCursor(0, 1);
     lcd.print(text);
 }

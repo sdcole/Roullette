@@ -7,11 +7,15 @@
 *
 */
 //Imports
+//Standard
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
-#include <lcdUtils.h>
 #include <Wire.h>
-#include <GameMode.h>
+
+//Local
+#include "LCDUtils.h"
+#include "GameMode.h"
+#include "GameLogic.h"
 
 //Prototypes
 void clearTopRow();
@@ -20,7 +24,7 @@ void setTopText(const char*);
 void setBottomText(const char*);
 void setColor(int, int, int);
 
-const char* currentGameModeText(GameMode);
+const char* getCurrentGameModeText(GameMode);
 void incrementGameMode(GameMode &gameMode);
 
 //initialize the liquid crystal library
@@ -31,16 +35,19 @@ const int relayPowerPin = 4;
 const int relaySwitchPin = 5;
 
 //Init buttons
-int buttonState = 0;  // variable for reading the pushbutton status
 int redPin= 6;
 int greenPin = 7;
 int bluePin = 8;
 
 bool isPlaying = 0;
+bool bottomTextChange = 0;
+bool topTextChange = 0;
+
 GameMode gameMode = GameMode::CLASSIC6;
+GameLogic gameLogic(navButtonPin, selectButtonPin, redPin, greenPin, bluePin);
 
 void setup() {
-  
+  Serial.begin(9600);
   //initialize lcd screen
   lcd.init();
   // turn on the backlight
@@ -55,44 +62,70 @@ void setup() {
   setTopText("TASER ROULLETTE ");
   delay(1000);
   //Sleep 1000ms before starting game
-  clearTopRow();
+  //Begining of the loop -- Here we need to begin menu logic.
+  setTopText("  SELECT MODE   ");
+
+  //Set the initial bottom text with the first game mode.
+  setBottomText(getCurrentGameModeText(gameMode));
+  setColor(0,  255, 0); // Green Color
 }
 
 void loop() {
 
-  //Begining of the loop -- Here we need to begin menu logic.
-  setTopText("  SELECT MODE   ");
-  clearBottomRow();
-  setBottomText(currentGameModeText(gameMode));
-
-  buttonState = digitalRead(navButtonPin);
-  if (buttonState == HIGH) {
-    incrementGameMode(gameMode);
-    clearBottomRow();
-    setBottomText(currentGameModeText(gameMode));
-    setColor(255, 0, 0); // Red Color
+  //This condition if true will begin the game based off of the selected gamemode.
+  if (isPlaying) {
+    //PlayGame
+    gameLogic.startGame(gameMode);
+    //If we ever get here restart setup.
+    isPlaying = false;
+    delay(250);
+    setTopText("  SELECT MODE   ");
   }
   else {
-    
-  }
+    //This condition will begin the game if the button is pressed.
+    if (digitalRead(selectButtonPin) == HIGH) {
+      //Delays are required using I2C interface otherwise LCD will not update.
+      delay(250);
+      setBottomText("   BEGIN GAME   ");
+      //Set state of the game to begin
+      
+      setTopText(getCurrentGameModeText(gameMode));
+      setColor(255, 0, 0); // Red Color
+      isPlaying = true;
+    }
+    //This condition will move game types in the menu.
+    else if (digitalRead(navButtonPin) == HIGH) {
+      incrementGameMode(gameMode);
+      setBottomText(getCurrentGameModeText(gameMode));
+      
+    }
 
-  //wait  for a second
-  delay(1000);
-  setColor(0,  255, 0); // Green Color
-  // tell the screen to write on the top row
-  delay(1000);
-  clearTopRow();
-  clearBottomRow();
-  
+    delay(750);
+    
+    }
+    
 }
 
+
+
+
+void incrementGameMode(GameMode &mode) {
+    mode = static_cast<GameMode>((static_cast<int>(mode) + 1) % static_cast<int>(4));
+}
+
+//This sets the color of the RGB light
+void setColor(int redValue, int greenValue,  int blueValue) {
+  analogWrite(redPin, redValue);
+  analogWrite(greenPin,  greenValue);
+  analogWrite(bluePin, blueValue);
+}
 
 /*
 * currentGameModeText
 * This function gets passed the current game mode and returns the char array pointer that is needed to load into the display.
 *
 */
-const char* currentGameModeText(GameMode gameMode) {
+const char* getCurrentGameModeText(GameMode gameMode) {
 
   switch (gameMode) {
     case GameMode::CLASSIC6:
@@ -108,15 +141,5 @@ const char* currentGameModeText(GameMode gameMode) {
       return "    RANDOM 10   ";
       break;
   }
-}
-
-void incrementGameMode(GameMode &mode) {
-    mode = static_cast<GameMode>((static_cast<int>(mode) + 1) % static_cast<int>(4));
-}
-
-//This sets the color of the RGB light
-void setColor(int redValue, int greenValue,  int blueValue) {
-  analogWrite(redPin, redValue);
-  analogWrite(greenPin,  greenValue);
-  analogWrite(bluePin, blueValue);
+  return "  ERROR VALUE  ";
 }
