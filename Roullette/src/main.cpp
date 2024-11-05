@@ -44,7 +44,7 @@ bool bottomTextChange = 0;
 bool topTextChange = 0;
 
 GameMode gameMode = GameMode::CLASSIC6;
-GameLogic gameLogic(navButtonPin, selectButtonPin, redPin, greenPin, bluePin);
+GameLogic gameLogic(navButtonPin, selectButtonPin, redPin, greenPin, bluePin, relayPowerPin, relaySwitchPin);
 
 void setup() {
   Serial.begin(9600);

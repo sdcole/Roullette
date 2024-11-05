@@ -5,11 +5,13 @@
 
 
 
-GameLogic::GameLogic(int navButtonPin, int selectButtonPin, int redPin, int greenPin, int bluePin) : 
-    navButtonPin(navButtonPin), selectButtonPin(selectButtonPin), isGameActive(false) {
+GameLogic::GameLogic(int navButtonPin, int selectButtonPin, int redPin, int greenPin, int bluePin, int relayPowerPin, int relaySwitchPin) : 
+    navButtonPin(navButtonPin), selectButtonPin(selectButtonPin), redPin(redPin), greenPin(greenPin), bluePin(bluePin), relayPowerPin(relayPowerPin), relaySwitchPin(relaySwitchPin), isGameActive(false) {
 
     pinMode(navButtonPin, INPUT);
     pinMode(selectButtonPin, INPUT);
+    pinMode(relayPowerPin, OUTPUT);
+    pinMode(relaySwitchPin, OUTPUT);
 }
 
 
@@ -17,6 +19,10 @@ void GameLogic::startGame(GameMode mode) {
     // Set the game mode
     gameMode = mode;
     isGameActive = true;
+
+
+    //This will turn on the power.
+    digitalWrite(relayPowerPin, HIGH);
 
     // Display game start message
     Serial.println("Game Started!");
@@ -56,9 +62,15 @@ void GameLogic::playRandom(int probability) {
       Serial.println(randomValue);
       if (randomValue == 0) {
         //TRIGGER TASER
-        delay(100);
         setBottomText("    YOU LOSE    ");
+        digitalWrite(relaySwitchPin, HIGH);
+        delay(100);
+        digitalWrite(relaySwitchPin, LOW);
       }
+      else {
+        setBottomText("      SAFE     ");
+      }
+      delay(200);
     }
   }
 }
@@ -74,7 +86,7 @@ void GameLogic::playClassic(int probability) {
       Serial.print("Random value: ");
       Serial.print(randomValue);
       if (randomValue == 0) {
-        //TRIGGER TASER
+        //TRIGGER
         delay(100);
         setBottomText("    YOU LOSE    ");
       }
