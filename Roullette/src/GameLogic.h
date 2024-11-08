@@ -4,6 +4,8 @@
 #include <Arduino.h>
 #include <GameMode.h>
 
+#include "LEDUtils.h"
+
 class GameLogic {
 public:
     GameLogic(int navButtonPin, int selectButtonPin, int redPin, int greenPin, int bluePin, int relayPowerPin, int relaySwitchPin);
@@ -21,6 +23,7 @@ private:
     int relaySwitchPin;
     bool isGameActive;     // Declare isGameActive here
     GameMode gameMode;  // Declare currentMode here
+    LEDUtils ledUtils;
 };
 
 #endif // GAMELOGIC_H

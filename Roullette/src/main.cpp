@@ -14,6 +14,7 @@
 
 //Local
 #include "LCDUtils.h"
+#include "LEDUtils.h"
 #include "GameMode.h"
 #include "GameLogic.h"
 
@@ -39,6 +40,7 @@ const int relaySwitchPin = 5;
 int redPin= 6;
 int greenPin = 7;
 int bluePin = 8;
+LEDUtils ledUtils(redPin, greenPin, bluePin);
 
 bool isPlaying = 0;
 bool bottomTextChange = 0;
@@ -72,7 +74,7 @@ void setup() {
 
   //Set the initial bottom text with the first game mode.
   setBottomText(getCurrentGameModeText(gameMode));
-  setColor(0,  255, 0); // Green Color
+  ledUtils.setColor(0,  255, 0); // Green Color
 }
 
 void loop() {
@@ -86,6 +88,7 @@ void loop() {
     delay(250);
     setTopText("  SELECT MODE   ");
     setBottomText(getCurrentGameModeText(gameMode));
+    ledUtils.setColor(0,  255, 0); // Green Color
   }
   else {
     //This condition will begin the game if the button is pressed.
@@ -96,7 +99,6 @@ void loop() {
       //Set state of the game to begin
       
       setTopText(getCurrentGameModeText(gameMode));
-      setColor(255, 0, 0); // Red Color
       isPlaying = true;
     }
     //This condition will move game types in the menu.
@@ -119,12 +121,7 @@ void incrementGameMode(GameMode &mode) {
     mode = static_cast<GameMode>((static_cast<int>(mode) + 1) % static_cast<int>(4));
 }
 
-//This sets the color of the RGB light
-void setColor(int redValue, int greenValue,  int blueValue) {
-  analogWrite(redPin, redValue);
-  analogWrite(greenPin,  greenValue);
-  analogWrite(bluePin, blueValue);
-}
+
 
 /*
 * currentGameModeText
