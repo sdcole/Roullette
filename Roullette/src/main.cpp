@@ -4,7 +4,7 @@
 * Date: 10/20/2024
 * This program is meant to run on a Arduino Nano.
 * It uses an IC2 display and momentary pushbuttons. to control the game.
-*
+* Roullette 
 */
 //Imports
 //Standard
@@ -80,6 +80,7 @@ void loop() {
     isPlaying = false;
     delay(250);
     setTopText("  SELECT MODE   ");
+    setBottomText(getCurrentGameModeText(gameMode));
   }
   else {
     //This condition will begin the game if the button is pressed.

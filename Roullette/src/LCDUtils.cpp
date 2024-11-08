@@ -1,5 +1,5 @@
 // lcdUtils.cpp
-#include "lcdUtils.h"
+#include "LCDUtils.h"
 
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 //Clears top row of the lcd
