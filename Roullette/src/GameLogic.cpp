@@ -21,7 +21,7 @@ void GameLogic::startGame(GameMode mode) {
 
 
     //This will turn on the power.
-    digitalWrite(relayPowerPin, HIGH);
+    digitalWrite(relayPowerPin, LOW);
 
     // Display game start message
     Serial.println("Game Started!");
@@ -62,9 +62,10 @@ void GameLogic::playRandom(int probability) {
       if (randomValue == 0) {
         //TRIGGER LOSE RELAY
         setBottomText("    YOU LOSE    ");
-        digitalWrite(relaySwitchPin, HIGH);
-        delay(100);
         digitalWrite(relaySwitchPin, LOW);
+        delay(100);
+        digitalWrite(relaySwitchPin, HIGH);
+        delay(500);
         return;
       }
       else {
@@ -99,9 +100,13 @@ void GameLogic::playClassic(int probability) {
           Serial.print(randomValue);
           //These conditions will check if the selection has already been made and loop until it hasn't.
           if (randomValue == 0) {
-            //TRIGGER
-            delay(100);
+            //TRIGGER LOSE RELAY
             setBottomText("    YOU LOSE    ");
+            digitalWrite(relaySwitchPin, LOW);
+            delay(100);
+            digitalWrite(relaySwitchPin, HIGH);
+            delay(500);
+            return;
           }
           else if (randomValue == 1) {
             if (hit1) {
@@ -110,6 +115,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit1 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -120,6 +127,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit2 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -130,6 +139,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit3 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -140,6 +151,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit4 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -150,11 +163,14 @@ void GameLogic::playClassic(int probability) {
             else {
               hit5 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
           
         }
+        validRandom = false;
         
       }
 
@@ -186,6 +202,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit1 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -196,6 +214,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit2 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -206,6 +226,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit3 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -216,6 +238,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit4 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -226,6 +250,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit5 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -236,6 +262,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit6 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -246,6 +274,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit7 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -256,6 +286,8 @@ void GameLogic::playClassic(int probability) {
             else {
               hit8 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
@@ -266,12 +298,15 @@ void GameLogic::playClassic(int probability) {
             else {
               hit9 = true;
               setBottomText("      SAFE      ");
+              delay(200);
+              clearBottomRow();
               validRandom = true;
             }
           }
 
           
         }
+        validRandom = false;
 
     delay(500);
   }

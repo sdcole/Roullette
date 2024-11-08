@@ -34,6 +34,7 @@ const int selectButtonPin = 3;
 const int relayPowerPin = 4;
 const int relaySwitchPin = 5;
 
+
 //Init buttons
 int redPin= 6;
 int greenPin = 7;
@@ -47,6 +48,10 @@ GameMode gameMode = GameMode::CLASSIC6;
 GameLogic gameLogic(navButtonPin, selectButtonPin, redPin, greenPin, bluePin, relayPowerPin, relaySwitchPin);
 
 void setup() {
+  pinMode(relayPowerPin, OUTPUT);
+  pinMode(relaySwitchPin, OUTPUT);
+  digitalWrite(relayPowerPin, HIGH);
+  digitalWrite(relaySwitchPin,HIGH);
   Serial.begin(9600);
   //initialize lcd screen
   lcd.init();
